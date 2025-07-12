@@ -1,15 +1,11 @@
 [build]
   # Указываем базовую директорию - папку с package.json
   base = "project"
-  # Команда сборки
-  command = "npm run build"
-  # Папка для публикации (зависит от вашего фреймворка)
-  publish = "project/.next"  # или project/.next если Next.js, или project/build
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+  # Команда сборки для Next.js
+  command = "npm install && npm run build"
+  # Папка для публикации Next.js (out для статического экспорта)
+  publish = "project/out"
 
 [build.environment]
   NEXT_PUBLIC_SITE_URL = "https://aa17-07-2025.netlify.app"
+  NEXT_TELEMETRY_DISABLED = "1"
