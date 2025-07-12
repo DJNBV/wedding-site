@@ -9,6 +9,7 @@ export const Icon = React.forwardRef<SVGSVGElement, IconProps>(
   ({ size = 24, className = '', ...props }, ref) => {
     return (
       <svg
+        {...props}
         ref={ref}
         width={size}
         height={size}
@@ -17,7 +18,6 @@ export const Icon = React.forwardRef<SVGSVGElement, IconProps>(
         stroke="currentColor"
         strokeWidth="1.5"
         className={className}
-        {...props}
       >
         <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z" />
         <line x1="16" y1="8" x2="2" y2="22" />
@@ -31,7 +31,7 @@ Icon.displayName = 'Icon'
 
 export const PencilIcon = React.forwardRef<SVGSVGElement, IconProps>(
   (props, ref) => {
-    return <Icon ref={ref} {...props} />
+    return <Icon {...props} ref={ref} />
   }
 )
 
