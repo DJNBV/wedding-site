@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { invoke } from '@tauri-apps/api/tauri';
 
 interface Props {
   url: string;
@@ -12,8 +11,10 @@ export default function Browser({ url, className }: Props) {
   useEffect(() => {
     const fetchContent = async () => {
       try {
-        const content = await invoke('browse_url', { url });
-        setBrowserContent(content as string);
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Network response was not ok');
+        const content = await response.text();
+        setBrowserContent(content);
       } catch (error) {
         console.error('Error fetching browser content:', error);
       }
