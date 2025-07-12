@@ -7,31 +7,54 @@ interface Props {
 
 export default function Browser({ url, className }: Props) {
   const [browserContent, setBrowserContent] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchContent = async () => {
+      setLoading(true);
+      setError(null);
+      
       try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error('Network response was not ok');
-        const content = await response.text();
-        setBrowserContent(content);
-      } catch (error) {
-        console.error('Error fetching browser content:', error);
+        // Для веб-версии используем iframe или просто ссылку
+        // Прямой fetch URL может быть заблокирован CORS
+        setBrowserContent(url);
+      } catch (err) {
+        setError('Не удалось загрузить контент');
+        console.error('Ошибка загрузки:', err);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchContent();
+    if (url) {
+      fetchContent();
+    }
   }, [url]);
 
+  if (loading) {
+    return <div className={className}>Загрузка...</div>;
+  }
+
+  if (error) {
+    return <div className={className}>Ошибка: {error}</div>;
+  }
+
   return (
-    <div className={`browser-wrapper ${className || ''}`}>
-      {browserContent ? (
-        <div dangerouslySetInnerHTML={{ __html: browserContent }} />
-      ) : (
-        <div className="flex items-center justify-center h-full">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-700" />
-        </div>
-      )}
+    <div className={className}>
+      {/* Вариант 1: Iframe */}
+      <iframe 
+        src={url} 
+        width="100%" 
+        height="600px"
+        frameBorder="0"
+        title="Browser content"
+      />
+      
+      {/* Вариант 2: Простая ссылка */}
+      {/* <a href={url} target="_blank" rel="noopener noreferrer">
+        Открыть {url}
+      </a> */}
     </div>
   );
 }
